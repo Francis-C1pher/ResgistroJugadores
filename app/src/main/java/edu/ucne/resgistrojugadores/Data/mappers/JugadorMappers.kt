@@ -1,4 +1,21 @@
-package edu.ucne.resgistrojugadores.Data.mappers
+package edu.ucne.RegistroJugadores.Data.mappers
 
-class JugadorMappers {
+import edu.ucne.RegistroJugadores.Data.Entities.JugadorEntity
+import edu.ucne.RegistroJugadores.Domain.model.Jugador
+
+
+fun JugadorEntity.toDomain(): Jugador {
+    return Jugador(
+        jugadorId = jugadorId,
+        nombres = nombres,
+        partidas = partidas
+    )
+}
+
+fun Jugador.toEntity(): JugadorEntity {
+    return JugadorEntity(
+        jugadorId = jugadorId,
+        nombres = nombres,
+        partidas = partidas
+    )
 }
