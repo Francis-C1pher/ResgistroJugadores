@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    namespace = "edu.ucne.registrotecnicos"
-    compileSdk = 35
+    namespace = "edu.ucne.RegistroJugadores"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "edu.ucne.registrotecnicos"
-        minSdk = 24
+        applicationId = "edu.ucne.RegistroJugadores"
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -55,6 +55,21 @@ android {
 }
 
 dependencies {
+
+
+
+    // Room
+    implementation("androidx.room:room-runtime:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
+    ksp("androidx.room:room-compiler:2.5.0")  // o kapt si usas kapt
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    // Compose
+    implementation("androidx.compose.ui:ui:1.5.4")
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
     //navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
