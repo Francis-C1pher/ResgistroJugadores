@@ -1,4 +1,7 @@
-package edu.ucne.resgistrojugadores.Domain.model
+package edu.ucne.RegistroJugadores.Domain.model
 
-class Jugador {
-}
+data class Jugador(
+    val jugadorId: Int = 0,
+    val nombres: String,
+    val partidas: Int
+)
