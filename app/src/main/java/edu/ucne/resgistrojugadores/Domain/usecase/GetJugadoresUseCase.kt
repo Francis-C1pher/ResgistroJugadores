@@ -1,4 +1,13 @@
-package edu.ucne.resgistrojugadores.Domain.usecase
+package edu.ucne.RegistroJugadores.Domain.usecase
 
-class GetJugadoresUseCase {
+import edu.ucne.RegistroJugadores.Domain.model.Jugador
+import edu.ucne.RegistroJugadores.Domain.repository.JugadorRepository
+import kotlinx.coroutines.flow.Flow
+
+class GetJugadoresUseCase(
+    private val repository: JugadorRepository
+) {
+    operator fun invoke(): Flow<List<Jugador>> {
+        return repository.getAllJugadores()
+    }
 }
