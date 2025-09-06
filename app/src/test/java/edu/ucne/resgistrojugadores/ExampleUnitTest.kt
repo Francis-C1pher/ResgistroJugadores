@@ -1,4 +1,4 @@
-package edu.ucne.resgistrojugadores
+package edu.ucne.RegistroJugadores
 
 import org.junit.Test
 
