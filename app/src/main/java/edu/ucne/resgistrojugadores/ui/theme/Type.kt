@@ -1,4 +1,4 @@
-package edu.ucne.resgistrojugadores.ui.theme
+package edu.ucne.RegistroJugadores.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
