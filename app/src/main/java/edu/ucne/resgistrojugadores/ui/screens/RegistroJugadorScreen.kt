@@ -12,27 +12,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import edu.ucne.RegistroJugadores.Data.DataBase.AppDatabase
-import edu.ucne.RegistroJugadores.Data.repository.JugadorRepositoryImpl
 import edu.ucne.RegistroJugadores.Domain.model.Jugador
-import edu.ucne.RegistroJugadores.Domain.usecase.GetJugadoresUseCase
-import edu.ucne.RegistroJugadores.Domain.usecase.InsertJugadorUseCase
-import edu.ucne.RegistroJugadores.Domain.usecase.ValidateJugadorUseCase
+import edu.ucne.RegistroJugadores.JugadorApplication
 import edu.ucne.RegistroJugadores.ui.events.RegistroJugadorEvent
 import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModel
 import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModelFactory
 
 @Composable
 fun RegistroJugadorScreen() {
+    // ✅ SOLUCIÓN: Obtener dependencias a través del Application
     val context = LocalContext.current
-    val database = remember { AppDatabase.getDatabase(context) }
-    val repository = remember { JugadorRepositoryImpl(database.jugadorDao()) }
+    val application = context.applicationContext as JugadorApplication
 
     val viewModel: RegistroJugadorViewModel = viewModel(
         factory = RegistroJugadorViewModelFactory(
-            GetJugadoresUseCase(repository),
-            InsertJugadorUseCase(repository),
-            ValidateJugadorUseCase(repository)
+            application.getJugadoresUseCase,
+            application.insertJugadorUseCase,
+            application.validateJugadorUseCase
         )
     )
 
