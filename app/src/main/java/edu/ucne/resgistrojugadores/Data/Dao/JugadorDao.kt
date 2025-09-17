@@ -24,6 +24,6 @@ interface JugadorDao {
     @Query("SELECT * FROM Jugadores WHERE nombres = :nombre")
     suspend fun getByNombre(nombre: String): JugadorEntity?
 
-    @Query("SELECT COUNT(*) FROM Jugadores WHERE nombres = :nombre")
+    @Query("SELECT COUNT(*) FROM Jugadores WHERE nombres = :nombre")  //XD
     suspend fun existeNombre(nombre: String): Int
 }
