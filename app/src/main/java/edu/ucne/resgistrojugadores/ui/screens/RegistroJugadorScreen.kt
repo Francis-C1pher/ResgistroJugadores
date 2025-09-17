@@ -20,7 +20,7 @@ import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModelFactory
 
 @Composable
 fun RegistroJugadorScreen() {
-    // ✅ SOLUCIÓN: Obtener dependencias a través del Application
+
     val context = LocalContext.current
     val application = context.applicationContext as JugadorApplication
 
@@ -28,6 +28,7 @@ fun RegistroJugadorScreen() {
         factory = RegistroJugadorViewModelFactory(
             application.getJugadoresUseCase,
             application.insertJugadorUseCase,
+            application.deleteJugadorUseCase,
             application.validateJugadorUseCase
         )
     )
