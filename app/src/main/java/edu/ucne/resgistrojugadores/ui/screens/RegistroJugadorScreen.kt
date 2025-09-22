@@ -3,6 +3,10 @@ package edu.ucne.RegistroJugadores.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,8 +22,9 @@ import edu.ucne.RegistroJugadores.ui.events.RegistroJugadorEvent
 import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModel
 import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistroJugadorScreen() {
+fun RegistroJugadorScreen(onNavigateBack: (() -> Unit)? = null) {
 
     val context = LocalContext.current
     val application = context.applicationContext as JugadorApplication
@@ -41,6 +46,31 @@ fun RegistroJugadorScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Botón Volver al Menú
+        onNavigateBack?.let { navigateBack ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                OutlinedButton(
+                    onClick = navigateBack,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "Volver",
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Volver al Menú")
+                }
+            }
+        }
+
         Text(
             text = "Registro de Jugadores Tic-Tac-Toe",
             style = MaterialTheme.typography.headlineMedium,
@@ -164,39 +194,69 @@ fun RegistroJugadorScreen() {
 
         LazyColumn {
             items(state.jugadores) { jugador ->
-                JugadorItem(jugador = jugador)
+                JugadorItem(
+                    jugador = jugador,
+                    onEdit = { viewModel.onEvent(RegistroJugadorEvent.SelectJugador(it.jugadorId ?: 0)) },
+                    onDelete = { viewModel.onEvent(RegistroJugadorEvent.DeleteJugador(it.jugadorId ?: 0)) }
+                )
             }
         }
     }
 }
 
 @Composable
-fun JugadorItem(jugador: Jugador) {
+fun JugadorItem(
+    jugador: Jugador,
+    onEdit: (Jugador) -> Unit,
+    onDelete: (Jugador) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "ID: ${jugador.jugadorId}",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-            Text(
-                text = jugador.nombres,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Partidas: ${jugador.partidas}",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "ID: ${jugador.jugadorId}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+                Text(
+                    text = jugador.nombres,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Partidas: ${jugador.partidas}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            // Botones de Acción
+            Row {
+                IconButton(onClick = { onEdit(jugador) }) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = "Editar jugador",
+                        tint = Color.Blue
+                    )
+                }
+                IconButton(onClick = { onDelete(jugador) }) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "Eliminar jugador",
+                        tint = Color.Red
+                    )
+                }
+            }
         }
     }
 }
