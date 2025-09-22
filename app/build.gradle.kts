@@ -88,7 +88,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.0-alpha02")
     implementation ("androidx.compose.material:material:1.4.0")
     implementation("androidx.compose.material:material:1.3.1") // Usa la última versión
-
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
 
     //Hilt
@@ -101,6 +101,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
