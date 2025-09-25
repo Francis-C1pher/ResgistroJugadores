@@ -74,7 +74,7 @@ class RegistroJugadorViewModel(
 
     private fun saveJugador() {
         viewModelScope.launch {
-            // ✅ ISSUE 4 SOLUCIONADO: Validación de que partidas sea número entero
+            // Validación de que partidas sea número entero
             val partidasInt = try {
                 if (_state.value.partidas.isBlank()) {
                     _state.value = _state.value.copy(partidasError = "Las partidas son obligatorias")
@@ -88,8 +88,8 @@ class RegistroJugadorViewModel(
                 return@launch
             }
 
-            // Validaciones existentes
-            val nombresError = validateJugadorUseCase.validateNombre(_state.value.nombres)
+            // ✅ CAMBIO: Pasar jugadorId a las validaciones
+            val nombresError = validateJugadorUseCase.validateNombre(_state.value.nombres, _state.value.jugadorId)
             val partidasError = validateJugadorUseCase.validatePartidas(_state.value.partidas)
 
             if (nombresError != null || partidasError != null) {
@@ -105,10 +105,9 @@ class RegistroJugadorViewModel(
             val jugador = Jugador(
                 jugadorId = if (_state.value.jugadorId == 0) null else _state.value.jugadorId,
                 nombres = _state.value.nombres.trim(),
-                partidas = partidasInt // ✅ Usar el Int validado
+                partidas = partidasInt
             )
 
-            // ✅ ISSUES 2 y 5 SOLUCIONADOS: Manejo de errores más robusto con excepciones específicas
             insertJugadorUseCase(jugador)
                 .onSuccess {
                     _state.value = RegistroJugadorState(

@@ -36,17 +36,40 @@ class InsertJugadorUseCase(
                     )
                 }
 
-                // Validar que no exista el nombre (solo si es nuevo jugador)
-                if (jugador.jugadorId == null || jugador.jugadorId == 0) {
-                    if (repository.existeNombre(jugador.nombres.trim())) {
-                        return@withContext Result.failure(
-                            JugadorAlreadyExistsException("Ya existe un jugador con el nombre '${jugador.nombres.trim()}'")
-                        )
-                    }
-                }
-
                 try {
-                    val id = repository.insertJugador(jugador.copy(nombres = jugador.nombres.trim()))
+                    // ✅ CAMBIO PRINCIPAL: Distinguir entre INSERT y UPDATE
+                    val id = if (jugador.jugadorId == null || jugador.jugadorId == 0) {
+                        // NUEVO JUGADOR: Validar nombre único
+                        if (repository.existeNombre(jugador.nombres.trim())) {
+                            return@withContext Result.failure(
+                                JugadorAlreadyExistsException("Ya existe un jugador con el nombre '${jugador.nombres.trim()}'")
+                            )
+                        }
+
+                        // Insertar nuevo jugador
+                        repository.insertJugador(jugador.copy(nombres = jugador.nombres.trim()))
+                    } else {
+                        // JUGADOR EXISTENTE: Actualizar
+                        val jugadorActual = repository.getJugadorById(jugador.jugadorId)
+                        if (jugadorActual == null) {
+                            return@withContext Result.failure(
+                                JugadorValidationException("No se encontró el jugador a actualizar")
+                            )
+                        }
+
+                        // Solo validar nombre único si cambió
+                        if (jugadorActual.nombres.trim() != jugador.nombres.trim() &&
+                            repository.existeNombre(jugador.nombres.trim())) {
+                            return@withContext Result.failure(
+                                JugadorAlreadyExistsException("Ya existe un jugador con el nombre '${jugador.nombres.trim()}'")
+                            )
+                        }
+
+                        // Actualizar jugador existente
+                        repository.updateJugador(jugador.copy(nombres = jugador.nombres.trim()))
+                        jugador.jugadorId.toLong()
+                    }
+
                     Result.success(id)
                 } catch (e: Exception) {
                     Result.failure(JugadorDatabaseException("Error al guardar en la base de datos: ${e.message}"))
