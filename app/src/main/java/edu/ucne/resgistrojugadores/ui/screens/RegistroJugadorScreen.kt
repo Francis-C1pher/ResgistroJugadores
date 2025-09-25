@@ -3,6 +3,8 @@ package edu.ucne.RegistroJugadores.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -40,9 +42,11 @@ fun RegistroJugadorScreen(onNavigateBack: (() -> Unit)? = null) {
 
     val state by viewModel.state.collectAsState()
 
+    // ✅ CAMBIO PRINCIPAL: Hacer toda la pantalla deslizable
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // ✅ AGREGAR SCROLL A TODA LA PANTALLA
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -136,7 +140,7 @@ fun RegistroJugadorScreen(onNavigateBack: (() -> Unit)? = null) {
                                 color = Color.White
                             )
                         } else {
-                            Text("Guardar")
+                            Text(if (state.jugadorId == 0) "Crear" else "Actualizar")
                         }
                     }
 
@@ -192,8 +196,9 @@ fun RegistroJugadorScreen(onNavigateBack: (() -> Unit)? = null) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn {
-            items(state.jugadores) { jugador ->
+        // ✅ CAMBIO: Reemplazar LazyColumn por Column simple para permitir scroll
+        Column {
+            state.jugadores.forEach { jugador ->
                 JugadorItem(
                     jugador = jugador,
                     onEdit = { viewModel.onEvent(RegistroJugadorEvent.SelectJugador(it.jugadorId ?: 0)) },
@@ -201,6 +206,9 @@ fun RegistroJugadorScreen(onNavigateBack: (() -> Unit)? = null) {
                 )
             }
         }
+
+        // ✅ AGREGAR: Espaciado final para mejor UX
+        Spacer(modifier = Modifier.height(100.dp))
     }
 }
 
