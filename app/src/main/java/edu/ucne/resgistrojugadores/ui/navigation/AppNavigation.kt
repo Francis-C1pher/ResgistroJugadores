@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import edu.ucne.RegistroJugadores.ui.screens.MenuPrincipalScreen
 import edu.ucne.RegistroJugadores.ui.screens.RegistroJugadorScreen
+import edu.ucne.RegistroJugadores.ui.screens.RegistroLogroScreen
 import edu.ucne.RegistroJugadores.ui.screens.RegistroPartidaScreen
 
 // Rutas de navegación
@@ -14,6 +15,7 @@ object AppRoutes {
     const val MENU_PRINCIPAL = "menu_principal"
     const val REGISTRO_JUGADORES = "registro_jugadores"
     const val REGISTRO_PARTIDAS = "registro_partidas"
+    const val REGISTRO_LOGROS = "registro_logros"  // ✅ NUEVA RUTA
 }
 
 @Composable
@@ -41,6 +43,15 @@ fun AppNavigation(
         // Pantalla de registro de partidas
         composable(AppRoutes.REGISTRO_PARTIDAS) {
             RegistroPartidaScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // ✅ NUEVA PANTALLA: Registro de logros
+        composable(AppRoutes.REGISTRO_LOGROS) {
+            RegistroLogroScreen(
                 onNavigateBack = {
                     navController.popBackStack()
                 }
