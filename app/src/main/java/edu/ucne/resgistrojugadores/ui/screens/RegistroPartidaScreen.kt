@@ -2,8 +2,8 @@ package edu.ucne.RegistroJugadores.ui.screens
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -46,9 +46,11 @@ fun RegistroPartidaScreen(onNavigateBack: (() -> Unit)? = null) {
     val state by viewModel.state.collectAsState()
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
+    // ✅ CAMBIO PRINCIPAL: Hacer toda la pantalla deslizable
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // ✅ AGREGAR SCROLL A TODA LA PANTALLA
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -283,8 +285,9 @@ fun RegistroPartidaScreen(onNavigateBack: (() -> Unit)? = null) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn {
-            items(state.partidas) { partida ->
+        // ✅ CAMBIO: Reemplazar LazyColumn por Column simple para permitir scroll
+        Column {
+            state.partidas.forEach { partida ->
                 PartidaItem(
                     partida = partida,
                     jugadores = state.jugadoresDisponibles,
@@ -293,6 +296,9 @@ fun RegistroPartidaScreen(onNavigateBack: (() -> Unit)? = null) {
                 )
             }
         }
+
+        // ✅ AGREGAR: Espaciado final para mejor UX
+        Spacer(modifier = Modifier.height(100.dp))
     }
 }
 
@@ -437,7 +443,7 @@ fun PartidaItem(
                     )
 
                     Text(
-                        text = "📅 ${dateFormat.format(partida.fecha)}",
+                        text = "${dateFormat.format(partida.fecha)}",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray
                     )
@@ -505,7 +511,7 @@ fun PartidaItem(
                             )
                         ) {
                             Text(
-                                text = if (partida.esFinalizada) "✅ Finalizada" else "⏳ En curso",
+                                text = if (partida.esFinalizada) "Finalizada" else "En curso",
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = if (partida.esFinalizada) Color.Green else Color(0xFFFFA500),
@@ -521,7 +527,7 @@ fun PartidaItem(
                                 )
                             ) {
                                 Text(
-                                    text = if (ganador != null) "🏆 ${ganador.nombres}" else "🤝 Empate",
+                                    text = if (ganador != null) "${ganador.nombres}" else "Empate",
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = Color.Blue,
