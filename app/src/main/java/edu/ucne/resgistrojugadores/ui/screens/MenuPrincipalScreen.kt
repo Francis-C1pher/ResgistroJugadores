@@ -135,6 +135,17 @@ fun MenuPrincipalScreen(
                 backgroundColor = Color(0xFF2196F3),
                 onClick = {
                     navController.navigate(AppRoutes.REGISTRO_PARTIDAS)
+
+
+                }
+            )
+
+            MenuButton(
+                title = "🏆 Registro de Logros",
+                subtitle = "Crear y gestionar logros",
+                backgroundColor = Color(0xFFFF9800),
+                onClick = {
+                    navController.navigate(AppRoutes.REGISTRO_LOGROS)
                 }
             )
         }
