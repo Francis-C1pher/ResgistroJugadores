@@ -3,7 +3,7 @@ package edu.ucne.RegistroJugadores.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PlayArrow  // ✅ CAMBIO: Usar PlayArrow en lugar de SportsEsports
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +20,8 @@ import edu.ucne.RegistroJugadores.JugadorApplication
 import edu.ucne.RegistroJugadores.ui.navigation.AppRoutes
 import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModel
 import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroJugadorViewModelFactory
+import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroPartidaViewModel
+import edu.ucne.RegistroJugadores.ui.viewmodel.RegistroPartidaViewModelFactory
 
 @Composable
 fun MenuPrincipalScreen(
@@ -28,7 +30,7 @@ fun MenuPrincipalScreen(
     val context = LocalContext.current
     val application = context.applicationContext as JugadorApplication
 
-    // ViewModel para obtener estadísticas
+    // ViewModel para obtener estadísticas de jugadores
     val jugadorViewModel: RegistroJugadorViewModel = viewModel(
         factory = RegistroJugadorViewModelFactory(
             application.getJugadoresUseCase,
@@ -38,7 +40,19 @@ fun MenuPrincipalScreen(
         )
     )
 
+    // ✅ AGREGAR: ViewModel para obtener estadísticas de partidas
+    val partidaViewModel: RegistroPartidaViewModel = viewModel(
+        factory = RegistroPartidaViewModelFactory(
+            application.getPartidasUseCase,
+            application.insertPartidaUseCase,
+            application.deletePartidaUseCase,
+            application.validatePartidaUseCase,
+            application.getJugadoresUseCase
+        )
+    )
+
     val jugadorState by jugadorViewModel.state.collectAsState()
+    val partidaState by partidaViewModel.state.collectAsState() // ✅ AGREGAR ESTADO DE PARTIDAS
 
     Column(
         modifier = Modifier
@@ -94,8 +108,8 @@ fun MenuPrincipalScreen(
 
                     EstadisticaItem(
                         titulo = "Partidas",
-                        valor = "0", // TODO: Implementar cuando tengamos partidas
-                        icono = Icons.Default.PlayArrow  // ✅ CAMBIO: PlayArrow en lugar de SportsEsports
+                        valor = "${partidaState.partidas.size}", // ✅ CAMBIO: Usar partidas reales
+                        icono = Icons.Default.PlayArrow
                     )
                 }
             }
